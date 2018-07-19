@@ -1,21 +1,21 @@
 package com.synerzip.ExpenseCalculation;
 
 import org.junit.Test;
+
+import com.synerzip.expenseCalculation.controller.UserController;
+import com.synerzip.expenseCalculation.model.LoginUser;
+import com.synerzip.expenseCalculation.model.User;
+
 import static org.junit.Assert.assertEquals;;
 
 public class MainTest {
 	User user = new User();
-	ControllerClass c = new ControllerClass();
+	UserController c = new UserController();
 	LoginUser l = new LoginUser();
 
 	@Test
 	public void testRegistration() {
 		assertEquals(user, c.registerUser(user));
 	}
-
-//	@Test
-//	public void testLogin() {
-//		assertEquals("/dashboard", c.loginUser(l));
-//	}
 
 }

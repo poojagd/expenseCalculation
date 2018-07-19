@@ -1,26 +1,26 @@
-package com.synerzip.ExpenseCalculation;
+package com.synerzip.expenseCalculation.model;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoginUser {
-	private String email_id;
+	private String emailId;
 	private String password;
 
 	public LoginUser() {
 	}
 
-	public LoginUser(String email_id, String password) {
-		this.email_id = email_id;
+	public LoginUser(String emailId, String password) {
+		this.emailId = emailId;
 		this.password = password;
 	}
 
-	public String getEmail_id() {
-		return email_id;
+	public String getEmailId() {
+		return emailId;
 	}
 
-	public void setEmail_id(String email_id) {
-		this.email_id = email_id;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 
 	public String getPassword() {

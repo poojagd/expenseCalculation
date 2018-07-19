@@ -1,4 +1,4 @@
-package com.synerzip.ExpenseCalculation;
+package com.synerzip.expenseCalculation.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,35 +7,55 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.TableGenerator;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
+import com.synerzip.expenseCalculation.model.Category;
 
 @Entity
-@TableGenerator(name="tab", initialValue=0, allocationSize=50)
 public class Expense {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE,generator="tab")
-	@Column(nullable=false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
 
-	//private int user_id;
-	@ManyToOne()
-	@JoinColumn(name = "user_id",nullable=false)
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	public User getUser() {return user;}
-	public void setUser(User user) {this.user=user;}
-	
+
 	private String title;
-	//private int category_id;
+
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-	public Category getCategory() {return category;}
-	public void setCategory(Category category) {this.category=category;}
 
-	@Column(name = "date",nullable=false)
+	@Column(name = "date", nullable = false)
+	@NotNull(message = "Date should not be null.")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private java.sql.Date date;
+
+	@NumberFormat(style = Style.NUMBER)
 	private float amount;
-	String description;
+
+	private String description;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
 	public int getId() {
 		return id;
@@ -92,11 +112,11 @@ public class Expense {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
+
 	@Override
 	public String toString() {
-		return "Expense [id=" + id + ", title=" + title + ", category=" + category + ", user=" + user + ", date=" + date
-				+ ", amount=" + amount + ", description=" + description + "]";
+		return "Expense [id=" + id + ", title=" + title + ", categoryId=" + category.getId() + ", userId="
+				+ user.getId() + ", date=" + date + ", amount=" + amount + ", description=" + description + "]";
 	}
 
-	
 }
