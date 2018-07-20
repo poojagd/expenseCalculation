@@ -13,7 +13,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User addUser(User user) {
+	public User create(User user) {
 		String p = user.getPassword();
 		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10)));
 		return userRepository.save(user);

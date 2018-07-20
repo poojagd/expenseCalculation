@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -33,8 +32,7 @@ public class User {
 	private String emailId;
 
 	@Column(nullable = false)
-	@NotEmpty(message = "Password must not be blank.")
-	@Size(min = 3, message = "Password should be atleast 2 characters.")
+	@Size(min = 2, message = "Password should be atleast 2 characters.")
 	private String password;
 
 	public User() {

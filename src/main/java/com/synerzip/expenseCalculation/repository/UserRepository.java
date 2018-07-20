@@ -7,5 +7,4 @@ import com.synerzip.expenseCalculation.model.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
-
 }

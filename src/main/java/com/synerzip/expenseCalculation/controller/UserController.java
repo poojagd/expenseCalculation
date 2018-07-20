@@ -1,5 +1,7 @@
 package com.synerzip.expenseCalculation.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,14 +12,14 @@ import com.synerzip.expenseCalculation.model.User;
 import com.synerzip.expenseCalculation.service.UserService;
 
 @RestController
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/users")
 public class UserController {
 
 	@Autowired
 	UserService userService;
 
-	@PostMapping(path = "/register")
-	public User registerUser(@RequestBody User user) {
-		return userService.addUser(user);
+	@PostMapping
+	public User create(@Valid @RequestBody User user) {
+		return userService.create(user);
 	}
 }

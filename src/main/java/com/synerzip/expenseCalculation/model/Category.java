@@ -12,7 +12,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
 
-	@Size(min = 2, max = 30)
+	@Size(min = 2, max = 30, message = "Category name should be at least 2 characters.")
 	private String categoryName;
 
 	public int getId() {
