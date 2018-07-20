@@ -18,7 +18,7 @@ import com.synerzip.expenseCalculation.model.Category;
 @Entity
 public class Expense {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@ManyToOne
@@ -34,7 +34,7 @@ public class Expense {
 	@Column(name = "date", nullable = false)
 	@NotNull(message = "Date should not be null.")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private java.sql.Date date;
+	private java.util.Date date;
 
 	@NumberFormat(style = Style.NUMBER)
 	private float amount;
@@ -97,7 +97,7 @@ public class Expense {
 		this.description = description;
 	}
 
-	public java.sql.Date getDate() {
+	public java.util.Date getDate() {
 		return date;
 	}
 

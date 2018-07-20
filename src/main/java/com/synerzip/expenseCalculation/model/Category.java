@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Category {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Size(min = 2, max = 30, message = "Category name should be at least 2 characters.")

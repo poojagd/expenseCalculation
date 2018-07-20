@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Column(name = "first_name")
@@ -35,8 +35,7 @@ public class User {
 	@Size(min = 2, message = "Password should be atleast 2 characters.")
 	private String password;
 
-	public User() {
-	}
+	public User() {}
 
 	public User(int id, String firstName, String lastName, String emailId, String password) {
 		super();
