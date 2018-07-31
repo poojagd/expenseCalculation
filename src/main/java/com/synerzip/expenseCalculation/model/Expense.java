@@ -1,5 +1,7 @@
 package com.synerzip.expenseCalculation.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,12 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
-
 import com.synerzip.expenseCalculation.model.Category;
 
 @Entity
@@ -31,6 +33,7 @@ public class Expense {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "date", nullable = false)
 	@NotNull(message = "Date should not be null.")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -40,6 +43,20 @@ public class Expense {
 	private float amount;
 
 	private String description;
+
+	public Expense() {
+	}
+
+	public Expense(int id, User user, String title, Category category, Date date, float amount, String description) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.title = title;
+		this.category = category;
+		this.date = date;
+		this.amount = amount;
+		this.description = description;
+	}
 
 	public User getUser() {
 		return user;
@@ -98,10 +115,12 @@ public class Expense {
 	}
 
 	public java.util.Date getDate() {
+
 		return date;
 	}
 
-	public void setDate(java.sql.Date date) {
+	public void setDate(java.util.Date date) {
+
 		this.date = date;
 	}
 

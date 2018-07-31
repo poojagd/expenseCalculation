@@ -1,0 +1,5 @@
+    # Security enable/disable
+    security:
+      basic:
+        enabled: false
+      ignored : /**

@@ -19,6 +19,7 @@ public class UserControllerTest {
 	@Test
 	public void testCreateUser() {
 		assertEquals(user, c.create(user));
+		
 	}
 
 }

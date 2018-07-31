@@ -2,7 +2,6 @@ package com.synerzip.expenseCalculation.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +34,15 @@ public class User {
 	@Size(min = 2, message = "Password should be atleast 2 characters.")
 	private String password;
 
-	public User() {}
+	public User() {
+	}
+
+	public User(User user) {
+		this.firstName = user.firstName;
+		this.lastName = user.lastName;
+		this.emailId = user.emailId;
+		this.password = user.password;
+	}
 
 	public User(int id, String firstName, String lastName, String emailId, String password) {
 		super();
