@@ -2,24 +2,25 @@ package com.synerzip.expenseCalculation;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.jdbc.datasource.init.ScriptException;
 import com.synerzip.expenseCalculation.controller.UserController;
 import com.synerzip.expenseCalculation.model.User;
-
-import static org.junit.Assert.assertEquals;;
+import static org.junit.Assert.assertEquals;
+import java.sql.SQLException;;
 
 public class UserControllerTest {
-	
+
 	@Autowired
 	User user;
-	
+
 	@Autowired
 	UserController c;
-	
+
 	@Test
-	public void testCreateUser() {
+	public void testCreateUser() throws ScriptException, SQLException {
+
 		assertEquals(user, c.create(user));
-		
+
 	}
 
 }

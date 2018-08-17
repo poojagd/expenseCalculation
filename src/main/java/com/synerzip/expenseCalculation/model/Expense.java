@@ -9,8 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
@@ -18,20 +20,24 @@ import org.springframework.format.annotation.NumberFormat.Style;
 import com.synerzip.expenseCalculation.model.Category;
 
 @Entity
+@Table(name = "expense")
 public class Expense {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
 	private User user;
-
+	
+	@Column(name = "user_id")
+	private int userId;
+	
 	private String title;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private Category category;
+    private Category category;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "date", nullable = false)
@@ -43,7 +49,10 @@ public class Expense {
 	private float amount;
 
 	private String description;
-
+	
+	@Transient
+	private String categoryName;
+	
 	public Expense() {
 	}
 
@@ -81,21 +90,21 @@ public class Expense {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public int getUser_id() {
-		return user.getId();
+	
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUser_id(int user_id) {
-		user.setId(user_id);
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
-	public int getCategory_id() {
-		return category.getId();
+	public int getCategoryId() {
+		return this.category.getId();
 	}
 
-	public void setCategory_id(int category_id) {
-		category.setId(category_id);
+	public void setCategory_id(int categoryId) {
+		this.category.setId(categoryId);
 	}
 
 	public String getTitle() {
@@ -130,6 +139,14 @@ public class Expense {
 
 	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	@Override

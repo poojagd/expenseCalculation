@@ -1,32 +1,44 @@
 package com.synerzip.expenseCalculation.service;
 
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.synerzip.expenseCalculation.model.Category;
 import com.synerzip.expenseCalculation.model.Expense;
 import com.synerzip.expenseCalculation.model.User;
-import com.synerzip.expenseCalculation.repository.CategoryRepository;
 import com.synerzip.expenseCalculation.repository.ExpenseRepository;
-import com.synerzip.expenseCalculation.repository.UserRepository;
 
 @Service
 public class ExpenseService {
 
 	@Autowired
-	UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
-	CategoryRepository categoryRepository;
+	private CategoryService categoryService;
 
 	@Autowired
-	ExpenseRepository expenseRepository;
-
-	public Expense addExpense(int userId, Expense expense) {
-		User user = userRepository.findByUserId(userId);
-		expense.setUser(user);
-		Category category = categoryRepository.findByCategoryName(expense.getCategory().getCategoryName());
+	private ExpenseRepository expenseRepository;
+	
+	public Expense addExpense(Expense expense) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = userService.findByEmail(email);
+		expense.setUserId(user.getId());//set userid only
+		Category category = categoryService.findByCategoryName(expense.getCategoryName());
 		expense.setCategory(category);
 		return expenseRepository.save(expense);
 	}
-
+	
+	public List<Expense> getAll() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = userService.findByEmail(email);
+		List<Expense> allExpenses = expenseRepository.findAllByUserId(user.getId());
+		return allExpenses;
+		
+	}
 }

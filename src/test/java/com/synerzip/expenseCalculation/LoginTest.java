@@ -11,7 +11,7 @@ public class LoginTest {
 
 	@Bean
 	public User setUser() {
-		return new User(65, "demo", "demo", "demo@synerzip.com", "demo");
+		return new User(1, "demo", "demo", "demo@synerzip.com", "demo");
 	}
 
 	User user = setUser();
@@ -26,14 +26,14 @@ public class LoginTest {
 	@Test
 	public void testUsernameAndPassword() {
 		user.setPassword(BCrypt.hashpw("demo", BCrypt.gensalt(10)));
-		assertNotNull(userDetails.getEmailId());
+		assertNotNull(userDetails.getEmail());
 		assertNotNull(userDetails.getPassword());
 	}
 
 	@Test
 	public void testLoadUserByUsername() {
 		assertTrue(BCrypt.checkpw(user.getPassword(), BCrypt.hashpw(userDetails.getPassword(), BCrypt.gensalt(10))));
-		assertEquals(user.getEmailId(), userDetails.getUsername());
+		assertEquals(user.getEmail(), userDetails.getUsername());
 	}
 
 }

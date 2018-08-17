@@ -1,9 +1,15 @@
 package com.synerzip.expenseCalculation;
 
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -40,6 +46,7 @@ public class ExpenseControllerTest {
 	@MockBean
 	Expense anyExpense;
 	
+	List<Expense> listExpenses = new ArrayList<Expense>();
 	String jsonExpense;
 
 	@Test
@@ -65,13 +72,23 @@ public class ExpenseControllerTest {
 		jObject.put("date", "2013-09-18");
 		jsonExpense = jObject.toString();
 
-		BDDMockito.given(expenseService.addExpense(65, expense)).willReturn(anyExpense);
+		BDDMockito.given(expenseService.addExpense(expense)).willReturn(anyExpense);
 
-		mockmvc.perform(post("/expenses/65")
+		mockmvc.perform(post("/users/expenses")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(jsonExpense))
-			   .andExpect(status().isOk());
+			   .andExpect(status().isOk())
+			   .andExpect(content().string(startsWith("{\"id\":")));
 
+	}
+	
+	@Test
+	public void testGetAll() throws Exception {
+		
+		BDDMockito.given(expenseService.getAll()).willReturn(new ArrayList<Expense>());
+		mockmvc.perform(get("/users/expenses")
+				.contentType(MediaType.APPLICATION_JSON))
+	   .andExpect(status().isOk());
 	}
 
 }

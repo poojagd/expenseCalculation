@@ -28,7 +28,7 @@ public class User {
 
 	@Column(name = "email_id", unique = true, nullable = false)
 	@Email
-	private String emailId;
+	private String email;
 
 	@Column(nullable = false)
 	@Size(min = 2, message = "Password should be atleast 2 characters.")
@@ -40,16 +40,16 @@ public class User {
 	public User(User user) {
 		this.firstName = user.firstName;
 		this.lastName = user.lastName;
-		this.emailId = user.emailId;
+		this.email = user.email;
 		this.password = user.password;
 	}
 
-	public User(int id, String firstName, String lastName, String emailId, String password) {
+	public User(int id, String firstName, String lastName, String email, String password) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.emailId = emailId;
+		this.email = email;
 		this.password = password;
 	}
 
@@ -85,12 +85,12 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getEmailId() {
-		return emailId;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -103,7 +103,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + "]";
 	}
 
