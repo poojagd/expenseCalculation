@@ -10,10 +10,10 @@ import com.synerzip.expenseCalculation.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-	@Query("Select u from User u where u.id = :userId")
-	public User findByUserId(@Param("userId") int userId);
-	
-	@Query("Select u from User u where u.email = :email")
-	public User findByEmail(@Param("email") String email);
+  @Query("Select u from User u where u.id = :userId")
+  public User findByUserId(@Param("userId") int userId);
+
+  @Query("Select u from User u where u.email = :email")
+  public User findByEmail(@Param("email") String email);
 
 }

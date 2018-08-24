@@ -12,6 +12,6 @@ import com.synerzip.expenseCalculation.model.Expense;
 @Repository
 public interface ExpenseRepository extends CrudRepository<Expense, Integer> {
 
-	@Query("Select e from Expense e where e.userId = :userId")
-	public List<Expense> findAllByUserId(@Param("userId") int userId);
+  @Query("Select e from Expense e where e.userId = :userId")
+  public List<Expense> findByUserId(@Param("userId") int userId);
 }

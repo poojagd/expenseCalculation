@@ -11,18 +11,19 @@ import static java.util.Collections.emptyList;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	UserRepository userRepository;
+  @Autowired
+  UserRepository userRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
+  @Override
+  public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
 
-		com.synerzip.expenseCalculation.model.User user = userRepository.findByEmail(emailId);
+    com.synerzip.expenseCalculation.model.User user = userRepository.findByEmail(emailId);
 
-		if (user == null) {
-			throw new UsernameNotFoundException("EmailId not found.");
-		}
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), emptyList());
-	}
+    if (user == null) {
+      throw new UsernameNotFoundException("EmailId not found.");
+    }
+    return new org.springframework.security.core.userdetails.User(user.getEmail(),
+        user.getPassword(), emptyList());
+  }
 
 }

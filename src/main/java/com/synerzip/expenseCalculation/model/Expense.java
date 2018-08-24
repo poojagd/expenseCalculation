@@ -1,7 +1,6 @@
 package com.synerzip.expenseCalculation.model;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,137 +21,140 @@ import com.synerzip.expenseCalculation.model.Category;
 @Entity
 @Table(name = "expense")
 public class Expense {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private int id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
-	private User user;
-	
-	@Column(name = "user_id")
-	private int userId;
-	
-	private String title;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+  private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "category_id")
-    private Category category;
+  @Column(name = "user_id")
+  private int userId;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "date", nullable = false)
-	@NotNull(message = "Date should not be null.")
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	private java.util.Date date;
+  private String title;
 
-	@NumberFormat(style = Style.NUMBER)
-	private float amount;
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-	private String description;
-	
-	@Transient
-	private String categoryName;
-	
-	public Expense() {
-	}
+  @Temporal(TemporalType.DATE)
+  @Column(name = "date", nullable = false)
+  @NotNull(message = "Date should not be null.")
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private java.util.Date date;
 
-	public Expense(int id, User user, String title, Category category, Date date, float amount, String description) {
-		super();
-		this.id = id;
-		this.user = user;
-		this.title = title;
-		this.category = category;
-		this.date = date;
-		this.amount = amount;
-		this.description = description;
-	}
+  @NumberFormat(style = Style.NUMBER)
+  private float amount;
 
-	public User getUser() {
-		return user;
-	}
+  private String description;
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  @Transient
+  private String categoryName;
 
-	public Category getCategory() {
-		return category;
-	}
+  public Expense() {}
 
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+  public Expense(int id, User user, String title, Category category, Date date, float amount,
+      String description) {
+    super();
+    this.id = id;
+    this.user = user;
+    this.title = title;
+    this.category = category;
+    this.date = date;
+    this.amount = amount;
+    this.description = description;
+  }
 
-	public int getId() {
-		return id;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public int getUserId() {
-		return userId;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+  public Category getCategory() {
+    return category;
+  }
 
-	public int getCategoryId() {
-		return this.category.getId();
-	}
+  public void setCategory(Category category) {
+    this.category = category;
+  }
 
-	public void setCategory_id(int categoryId) {
-		this.category.setId(categoryId);
-	}
+  public int getId() {
+    return id;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public int getUserId() {
+    return userId;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public int getCategoryId() {
+    return this.category.getId();
+  }
 
-	public java.util.Date getDate() {
+  public void setCategoryId(int categoryId) {
+    this.category.setId(categoryId);
+  }
 
-		return date;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setDate(java.util.Date date) {
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-		this.date = date;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public float getAmount() {
-		return amount;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public void setAmount(float amount) {
-		this.amount = amount;
-	}
-	
-	public String getCategoryName() {
-		return categoryName;
-	}
+  public java.util.Date getDate() {
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
+    return date;
+  }
 
-	@Override
-	public String toString() {
-		return "Expense [id=" + id + ", title=" + title + ", categoryId=" + category.getId() + ", userId="
-				+ user.getId() + ", date=" + date + ", amount=" + amount + ", description=" + description + "]";
-	}
+  public void setDate(java.util.Date date) {
+
+    this.date = date;
+  }
+
+  public float getAmount() {
+    return amount;
+  }
+
+  public void setAmount(float amount) {
+    this.amount = amount;
+  }
+
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
+  }
+
+  @Override
+  public String toString() {
+    return "Expense [id=" + id + ", user=" + user + ", userId=" + userId + ", title=" + title
+        + ", category=" + category + ", date=" + date + ", amount=" + amount + ", description="
+        + description + ", categoryName=" + categoryName + "]";
+  }
+
+
 
 }

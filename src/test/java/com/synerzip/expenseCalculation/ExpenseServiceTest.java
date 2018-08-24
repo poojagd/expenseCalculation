@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+
+import com.synerzip.expenseCalculation.exceptions.CategoryNameNotFoundException;
 import com.synerzip.expenseCalculation.model.Category;
 import com.synerzip.expenseCalculation.model.Expense;
 import com.synerzip.expenseCalculation.model.User;
@@ -21,64 +23,65 @@ import com.synerzip.expenseCalculation.service.UserService;
 
 public class ExpenseServiceTest {
 
-	@MockBean
-	ExpenseRepository expenseRepository;
+  @MockBean
+  ExpenseRepository expenseRepository;
 
-	@MockBean
-	UserRepository userRepository;
-	
-	@MockBean
-	UserService userService;
+  @MockBean
+  UserRepository userRepository;
 
-	@MockBean
-	CategoryService categoryService;
+  @MockBean
+  UserService userService;
 
-	@MockBean
-	Expense expense;
+  @MockBean
+  CategoryService categoryService;
 
-	@Autowired
-	ExpenseService expenseService;
+  @MockBean
+  Expense expense;
 
-	TestEntityManager entityManager;
+  @Autowired
+  ExpenseService expenseService;
 
-	@TestConfiguration
-	static class ExpenseServiceTestConfiguration {
+  TestEntityManager entityManager;
 
-		@Bean
-		public ExpenseService expenseService() {
-			return new ExpenseService();
-		}
-	}
+  @TestConfiguration
+  static class ExpenseServiceTestConfiguration {
 
-	@Before
-	public void setUp(){
-		
-		User user = new User(1, "demo", "demo", "demo@gmail.com",
-				"$2a$10$/ZjjXeF3uH.l1TMofTxky.qZzdxJP8ek7bxdg.HqTM8ktOvMUTrlu");
-		Category category = new Category(1, "Electricity");
-		java.util.Date date = new Date();
-		expense = new Expense();
-		expense.setTitle("demo");
-		expense.setUser(user);
-		expense.setCategory(category);
-		expense.setDate(new java.sql.Date(date.getTime()));
-		expense.setAmount(1000);
-		expense.setDescription("demo");
+    @Bean
+    public ExpenseService expenseService() {
+      return new ExpenseService();
+    }
+  }
 
-		BDDMockito.when(userService.findByEmail("demo@gmail.com")).thenReturn(user);
-		BDDMockito.when(categoryService.findByCategoryName("Electricity")).thenReturn(category);
-		BDDMockito.when(expenseRepository.save(expense)).thenReturn(expense);
-		BDDMockito.when(expenseRepository.findAllByUserId(1)).thenReturn(new ArrayList<Expense>());
-	}
+  @Before
+  public void setUp() throws Exception {
 
-	@Test
-	public void testAddExpense() {
-		BDDMockito.when(expenseService.addExpense(expense)).thenReturn(expense);
-	}
-	
-	@Test
-	public void testGetAll() {
-		BDDMockito.when(expenseService.getAll()).thenReturn(new ArrayList<Expense>());
-	}
+    User user = new User(1, "demo", "demo", "demo@gmail.com",
+        "$2a$10$/ZjjXeF3uH.l1TMofTxky.qZzdxJP8ek7bxdg.HqTM8ktOvMUTrlu");
+    Category category = new Category(1, "Electricity");
+    java.util.Date date = new Date();
+    expense = new Expense();
+    expense.setTitle("demo");
+
+    expense.setCategory(category);
+    expense.setDate(new java.sql.Date(date.getTime()));
+    expense.setAmount(1000);
+    expense.setDescription("demo");
+    expense.setUserId(1);
+
+    BDDMockito.when(userService.findByEmail("demo@gmail.com")).thenReturn(user);
+    BDDMockito.when(categoryService.findByCategoryName("Electricity")).thenReturn(category);
+    BDDMockito.when(expenseRepository.save(expense)).thenReturn(expense);
+    BDDMockito.when(expenseRepository.findByUserId(1)).thenReturn(new ArrayList<Expense>());
+  }
+
+  @Test
+  public void testAddExpense() throws CategoryNameNotFoundException {
+    BDDMockito.when(expenseService.addExpense(expense)).thenReturn(expense);
+  }
+
+  @Test
+  public void testGetAll() {
+    BDDMockito.when(expenseService.getAll()).thenReturn(new ArrayList<Expense>());
+  }
 
 }

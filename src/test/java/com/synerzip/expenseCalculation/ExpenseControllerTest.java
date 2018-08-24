@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -37,58 +38,57 @@ import org.json.JSONObject;
 @AutoConfigureMockMvc(secure = false)
 public class ExpenseControllerTest {
 
-	@Autowired
-	MockMvc mockmvc;
+  @Autowired
+  MockMvc mockmvc;
 
-	@MockBean
-	ExpenseService expenseService;
+  @MockBean
+  ExpenseService expenseService;
 
-	@MockBean
-	Expense anyExpense;
-	
-	List<Expense> listExpenses = new ArrayList<Expense>();
-	String jsonExpense;
+  @MockBean
+  Expense anyExpense;
 
-	@Test
-	public void testAddExpense() throws Exception {
+  List<Expense> listExpenses = new ArrayList<Expense>();
+  String jsonExpense;
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date convertedCurrentDate = dateFormat.parse("2013-09-18");
+  @Test
+  public void testAddExpense() throws Exception {
 
-		Category category = new Category();
-		Expense expense = new Expense();
-		expense.setTitle("demo");
-		expense.setDate(convertedCurrentDate);
-		expense.setAmount(10000);
-		expense.setDescription("demo");
-		expense.setCategory(category);
-		expense.getCategory().setCategoryName("Electricity");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date convertedCurrentDate = dateFormat.parse("2013-09-18");
 
-		GsonBuilder gsonbuilder = new GsonBuilder();
-		Gson gson = gsonbuilder.setPrettyPrinting().create();
-		jsonExpense = gson.toJson(expense);
+    Category category = new Category();
+    Expense expense = new Expense();
+    expense.setTitle("demo");
+    expense.setDate(convertedCurrentDate);
+    expense.setAmount(10000);
+    expense.setDescription("demo");
+    expense.setCategory(category);
+    expense.getCategory().setCategoryName("Electricity");
 
-		JSONObject jObject = new JSONObject(jsonExpense);
-		jObject.put("date", "2013-09-18");
-		jsonExpense = jObject.toString();
+    GsonBuilder gsonbuilder = new GsonBuilder();
+    Gson gson = gsonbuilder.setPrettyPrinting().create();
+    jsonExpense = gson.toJson(expense);
 
-		BDDMockito.given(expenseService.addExpense(expense)).willReturn(anyExpense);
+    JSONObject jObject = new JSONObject(jsonExpense);
+    jObject.put("date", "2013-09-18");
+    jsonExpense = jObject.toString();
 
-		mockmvc.perform(post("/users/expenses")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(jsonExpense))
-			   .andExpect(status().isOk())
-			   .andExpect(content().string(startsWith("{\"id\":")));
+    BDDMockito.given(expenseService.addExpense(expense)).willReturn(anyExpense);
 
-	}
-	
-	@Test
-	public void testGetAll() throws Exception {
-		
-		BDDMockito.given(expenseService.getAll()).willReturn(new ArrayList<Expense>());
-		mockmvc.perform(get("/users/expenses")
-				.contentType(MediaType.APPLICATION_JSON))
-	   .andExpect(status().isOk());
-	}
+    mockmvc.perform(post("/user/expenses").contentType(MediaType.APPLICATION_JSON).header(
+        HttpHeaders.AUTHORIZATION,
+        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vQGdtYWlsLmNvbSIsImV4cCI6MTUzNTAyMzUzMX0.p4fZie8mGSB52aRxgEk_ToH5GogY3qbWJ1QeyDpjIXM22LeNhjHHrOzPgyzDEVIKRbnD5oCsHOZgCKbSfzgEwQ")
+        .content(jsonExpense)).andExpect(status().isOk())
+        .andExpect(content().string(startsWith("{\"id\":")));
+
+  }
+
+  @Test
+  public void testGetAll() throws Exception {
+
+    BDDMockito.given(expenseService.getAll()).willReturn(new ArrayList<Expense>());
+    mockmvc.perform(get("/user/expenses").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
 
 }

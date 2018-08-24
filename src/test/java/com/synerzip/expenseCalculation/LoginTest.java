@@ -9,31 +9,32 @@ import com.synerzip.expenseCalculation.model.User;
 
 public class LoginTest {
 
-	@Bean
-	public User setUser() {
-		return new User(1, "demo", "demo", "demo@synerzip.com", "demo");
-	}
+  @Bean
+  public User setUser() {
+    return new User(1, "demo", "demo", "demo@synerzip.com", "demo");
+  }
 
-	User user = setUser();
+  User user = setUser();
 
-	@Bean
-	public CustomUserDetails setCustomUserDetails() {
-		return new CustomUserDetails(user);
-	}
+  @Bean
+  public CustomUserDetails setCustomUserDetails() {
+    return new CustomUserDetails(user);
+  }
 
-	CustomUserDetails userDetails = setCustomUserDetails();
+  CustomUserDetails userDetails = setCustomUserDetails();
 
-	@Test
-	public void testUsernameAndPassword() {
-		user.setPassword(BCrypt.hashpw("demo", BCrypt.gensalt(10)));
-		assertNotNull(userDetails.getEmail());
-		assertNotNull(userDetails.getPassword());
-	}
+  @Test
+  public void testUsernameAndPassword() {
+    user.setPassword(BCrypt.hashpw("demo", BCrypt.gensalt(10)));
+    assertNotNull(userDetails.getEmail());
+    assertNotNull(userDetails.getPassword());
+  }
 
-	@Test
-	public void testLoadUserByUsername() {
-		assertTrue(BCrypt.checkpw(user.getPassword(), BCrypt.hashpw(userDetails.getPassword(), BCrypt.gensalt(10))));
-		assertEquals(user.getEmail(), userDetails.getUsername());
-	}
+  @Test
+  public void testLoadUserByUsername() {
+    assertTrue(BCrypt.checkpw(user.getPassword(),
+        BCrypt.hashpw(userDetails.getPassword(), BCrypt.gensalt(10))));
+    assertEquals(user.getEmail(), userDetails.getUsername());
+  }
 
 }

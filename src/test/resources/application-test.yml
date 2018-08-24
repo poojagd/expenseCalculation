@@ -1,5 +1,4 @@
-    # Security enable/disable
-    security:
-      basic:
-        enabled: false
-      ignored : /**
+security:
+  basic:
+    enabled: false
+  ignored: /**
