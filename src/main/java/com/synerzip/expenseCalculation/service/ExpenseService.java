@@ -47,7 +47,6 @@ public class ExpenseService {
   public List<Expense> getAll() {
     int userid = sessionUser.getUser().getId();
     List<Expense> allExpenses = expenseRepository.findByUserId(userid);
-    System.out.println(allExpenses);
     return allExpenses;
 
   }

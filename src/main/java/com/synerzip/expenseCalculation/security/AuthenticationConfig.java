@@ -29,12 +29,15 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests().antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll().anyRequest()
-        .authenticated().and().formLogin().loginPage("/login").permitAll().and()
+    http.authorizeRequests().antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll().and()
+    .authorizeRequests().antMatchers("/").permitAll().and()
+    .authorizeRequests().antMatchers("/h2-console/**").permitAll()
+    .anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
         .addFilter(new JWTAuthenticationFilter(authenticationManager()))
         .addFilter(new JWTAuthorizationFilter(authenticationManager())).sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    http.cors().and().csrf().disable();
+    http.csrf().disable();
+    http.headers().frameOptions().disable();
     http.cors().configurationSource(new CorsConfigurationSource() {
 
       @Override

@@ -19,10 +19,10 @@ public class Category {
 
   public Category() {}
 
-  public Category(int id,
+  public Category(
       @Size(min = 2, max = 30, message = "Category name should be at least 2 characters.") String categoryName) {
     super();
-    this.id = id;
+    
     this.categoryName = categoryName;
   }
 

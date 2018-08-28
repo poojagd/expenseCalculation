@@ -11,7 +11,7 @@ public class LoginTest {
 
   @Bean
   public User setUser() {
-    return new User(1, "demo", "demo", "demo@synerzip.com", "demo");
+    return new User("demo", "demo", "demo@synerzip.com", "demo");
   }
 
   User user = setUser();

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.synerzip.expenseCalculation.exceptions.EmailIdExistsException;
 import com.synerzip.expenseCalculation.model.User;
 import com.synerzip.expenseCalculation.repository.UserRepository;
@@ -40,9 +39,8 @@ public class UserService {
     user.setPassword(passwordEncoder().encode(user.getPassword()));
 
     if ((userRepository.findByEmail(user.getEmail()) != null)) {
-      throw new EmailIdExistsException("EmalId already exists. Please enter new emailId.");
+      throw new EmailIdExistsException("EmailId already exists. Please enter new emailId.");
     }
-
     return userRepository.save(user);
   }
 

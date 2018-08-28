@@ -55,9 +55,9 @@ public class ExpenseServiceTest {
   @Before
   public void setUp() throws Exception {
 
-    User user = new User(1, "demo", "demo", "demo@gmail.com",
+    User user = new User("demo", "demo", "demo@gmail.com",
         "$2a$10$/ZjjXeF3uH.l1TMofTxky.qZzdxJP8ek7bxdg.HqTM8ktOvMUTrlu");
-    Category category = new Category(1, "Electricity");
+    Category category = new Category( "Electricity");
     java.util.Date date = new Date();
     expense = new Expense();
     expense.setTitle("demo");
@@ -71,7 +71,7 @@ public class ExpenseServiceTest {
     BDDMockito.when(userService.findByEmail("demo@gmail.com")).thenReturn(user);
     BDDMockito.when(categoryService.findByCategoryName("Electricity")).thenReturn(category);
     BDDMockito.when(expenseRepository.save(expense)).thenReturn(expense);
-    BDDMockito.when(expenseRepository.findByUserId(1)).thenReturn(new ArrayList<Expense>());
+    BDDMockito.when(expenseRepository.findByUserId(user.getId())).thenReturn(new ArrayList<Expense>());
   }
 
   @Test

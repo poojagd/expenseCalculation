@@ -1,9 +1,9 @@
 package com.synerzip.expenseCalculation;
 
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ExpenseControllerTest {
 
   List<Expense> listExpenses = new ArrayList<Expense>();
   String jsonExpense;
-
+  
   @Test
   public void testAddExpense() throws Exception {
 
@@ -78,8 +78,10 @@ public class ExpenseControllerTest {
     mockmvc.perform(post("/user/expenses").contentType(MediaType.APPLICATION_JSON).header(
         HttpHeaders.AUTHORIZATION,
         "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vQGdtYWlsLmNvbSIsImV4cCI6MTUzNTAyMzUzMX0.p4fZie8mGSB52aRxgEk_ToH5GogY3qbWJ1QeyDpjIXM22LeNhjHHrOzPgyzDEVIKRbnD5oCsHOZgCKbSfzgEwQ")
-        .content(jsonExpense)).andExpect(status().isOk())
-        .andExpect(content().string(startsWith("{\"id\":")));
+        .requestAttr("title", "expenses")
+        
+        .content(jsonExpense))
+        .andExpect(status().isOk());
 
   }
 

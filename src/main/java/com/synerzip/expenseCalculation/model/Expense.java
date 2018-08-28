@@ -25,7 +25,7 @@ public class Expense {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
 
-  @ManyToOne
+  @ManyToOne(optional= true)
   @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
   private User user;
 
@@ -54,17 +54,22 @@ public class Expense {
 
   public Expense() {}
 
-  public Expense(int id, User user, String title, Category category, Date date, float amount,
-      String description) {
+  public Expense(User user, int userId, String title, Category category, Date date,
+      float amount, String description,String categoryName) {
     super();
-    this.id = id;
+    
     this.user = user;
+    this.userId = userId;
     this.title = title;
     this.category = category;
     this.date = date;
     this.amount = amount;
     this.description = description;
+    this.categoryName = categoryName;
+    
   }
+
+
 
   public User getUser() {
     return user;
