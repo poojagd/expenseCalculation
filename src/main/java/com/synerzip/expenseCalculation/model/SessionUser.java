@@ -16,7 +16,7 @@ public class SessionUser {
   @Autowired
   UserService userService;
 
-  public User getUser(){
+  public User getUser() {
     user =
         userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     return user;

@@ -36,9 +36,13 @@ public class UserService {
   private UserRepository userRepository;
 
   public User create(User user) throws EmailIdExistsException {
-    user.setPassword(passwordEncoder().encode(user.getPassword()));
+    String rawPassword = user.getPassword();
+    String encodedPassword = passwordEncoder().encode(rawPassword);
 
-    if ((userRepository.findByEmail(user.getEmail()) != null)) {
+    user.setPassword(encodedPassword);
+    
+    User founduser = userRepository.findByEmail(user.getEmail());
+    if (founduser != null) {
       throw new EmailIdExistsException("EmailId already exists. Please enter new emailId.");
     }
     return userRepository.save(user);

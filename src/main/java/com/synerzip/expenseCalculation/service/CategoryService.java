@@ -6,20 +6,12 @@ import com.synerzip.expenseCalculation.exceptions.CategoryNameNotFoundException;
 import com.synerzip.expenseCalculation.exceptions.CategoryNotFoundException;
 import com.synerzip.expenseCalculation.model.Category;
 import com.synerzip.expenseCalculation.repository.CategoryRepository;
-import com.synerzip.expenseCalculation.repository.ExpenseRepository;
-import com.synerzip.expenseCalculation.repository.UserRepository;
 
 @Service
 public class CategoryService {
 
   @Autowired
-  UserRepository userRepository;
-
-  @Autowired
   CategoryRepository categoryRepository;
-
-  @Autowired
-  ExpenseRepository expenseRepository;
 
   public Category findByCategoryName(String categoryName)
       throws CategoryNotFoundException, CategoryNameNotFoundException {
@@ -38,5 +30,10 @@ public class CategoryService {
 
     return category;
 
+  }
+
+  public Category create(Category category) {
+
+    return categoryRepository.save(category);
   }
 }

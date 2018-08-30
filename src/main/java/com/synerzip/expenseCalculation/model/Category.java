@@ -22,7 +22,14 @@ public class Category {
   public Category(
       @Size(min = 2, max = 30, message = "Category name should be at least 2 characters.") String categoryName) {
     super();
-    
+
+    this.categoryName = categoryName;
+  }
+
+  public Category(int id,
+      @Size(min = 2, max = 30, message = "Category name should be at least 2 characters.") String categoryName) {
+    super();
+    this.id = id;
     this.categoryName = categoryName;
   }
 

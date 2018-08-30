@@ -8,7 +8,6 @@ import com.synerzip.expenseCalculation.exceptions.CategoryNotFoundException;
 import com.synerzip.expenseCalculation.model.Category;
 import com.synerzip.expenseCalculation.model.Expense;
 import com.synerzip.expenseCalculation.model.SessionUser;
-import com.synerzip.expenseCalculation.repository.CategoryRepository;
 import com.synerzip.expenseCalculation.repository.ExpenseRepository;
 
 @Service
@@ -21,14 +20,11 @@ public class ExpenseService {
   private ExpenseRepository expenseRepository;
 
   @Autowired
-  private CategoryRepository categoryRepository;
-
-  @Autowired
   SessionUser sessionUser;
 
   public Expense addExpense(Expense expense) throws CategoryNameNotFoundException {
-
-    expense.setUserId(sessionUser.getUser().getId());
+    int id = sessionUser.getUser().getId();
+    expense.setUserId(id);
     Category category = null;
     try {
       category = categoryService.findByCategoryName(expense.getCategoryName());
@@ -37,7 +33,7 @@ public class ExpenseService {
 
       Category newCategory = new Category();
       newCategory.setCategoryName(expense.getCategoryName());
-      category = categoryRepository.save(newCategory);
+      category = categoryService.create(newCategory);
 
     }
     expense.setCategory(category);
@@ -45,8 +41,8 @@ public class ExpenseService {
   }
 
   public List<Expense> getAll() {
-    int userid = sessionUser.getUser().getId();
-    List<Expense> allExpenses = expenseRepository.findByUserId(userid);
+    int userId = sessionUser.getUser().getId();
+    List<Expense> allExpenses = expenseRepository.findByUserId(userId);
     return allExpenses;
 
   }

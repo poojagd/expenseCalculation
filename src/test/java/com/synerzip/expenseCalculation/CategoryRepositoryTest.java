@@ -1,5 +1,6 @@
 package com.synerzip.expenseCalculation;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -20,15 +21,25 @@ public class CategoryRepositoryTest {
 
   @Autowired
   private CategoryRepository categoryRepository;
-  
+
   @Test
   public void testFindByCategoryName() {
-    Category category = new Category( "Electricity");
+    Category category = new Category("Electricity");
     entityManager.persistAndFlush(category);
-    
+
     Category foundCategory = categoryRepository.findByCategoryName(category.getCategoryName());
-    
+
     assertEquals(category, foundCategory);
   }
 
+  @Test
+  public void testCreate() {
+    Category category = new Category("Electricity");
+
+    entityManager.persistAndFlush(category);
+
+    Category foundcategory = categoryRepository.save(category);
+
+    assertThat(foundcategory.getCategoryName()).isEqualTo(category.getCategoryName());
+  }
 }

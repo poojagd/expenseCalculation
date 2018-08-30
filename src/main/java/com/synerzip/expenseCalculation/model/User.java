@@ -51,6 +51,17 @@ public class User {
     this.password = password;
   }
 
+  public User(int id, String firstName, String lastName, @Email String email,
+      @Size(min = 2, message = "Password should be atleast 2 characters.") String password) {
+    super();
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+
+  }
+
   @OneToMany(targetEntity = Expense.class, mappedBy = "user")
   private List<Expense> userExpenses = new ArrayList<Expense>();
 
