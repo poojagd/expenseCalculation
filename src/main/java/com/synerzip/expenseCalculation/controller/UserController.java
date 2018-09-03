@@ -3,6 +3,7 @@ package com.synerzip.expenseCalculation.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +19,9 @@ public class UserController {
   @Autowired
   UserService userService;
 
-  @PostMapping
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
   public User create(@Valid @RequestBody User user) throws EmailIdExistsException {
     return userService.create(user);
   }
-
 }

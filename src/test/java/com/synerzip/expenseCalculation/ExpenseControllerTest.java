@@ -1,51 +1,70 @@
 package com.synerzip.expenseCalculation;
 
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.synerzip.expenseCalculation.controller.ExpenseController;
+import com.synerzip.expenseCalculation.exceptions.CategoryNameNotFoundException;
 import com.synerzip.expenseCalculation.model.Category;
 import com.synerzip.expenseCalculation.model.Expense;
+import com.synerzip.expenseCalculation.model.User;
 import com.synerzip.expenseCalculation.service.ExpenseService;
-import org.json.JSONObject;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ExpenseController.class)
-@ActiveProfiles(value = "test")
-@WebAppConfiguration
 @AutoConfigureMockMvc(secure = false)
 public class ExpenseControllerTest {
 
   @Autowired
   MockMvc mockmvc;
 
+  @Autowired
+  WebApplicationContext wac;
+
   @MockBean
   ExpenseService expenseService;
 
-  @MockBean
-  Expense anyExpense;
+  @InjectMocks
+  ExpenseController expenseController;
 
-  List<Expense> listExpenses = new ArrayList<Expense>();
   String jsonExpense;
+
+  ObjectMapper objectMapper = new ObjectMapper();
+
+  User user = new User(1, "demo", "demo", "demo@gmail.com",
+      "$2a$10$/ZjjXeF3uH.l1TMofTxky.qZzdxJP8ek7bxdg.HqTM8ktOvMUTrlu");
+  Category category = new Category(1, "Electricity");
+
+  @Before
+  public void setUp() {
+    mockmvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+  }
 
   @Test
   public void testAddExpense() throws Exception {
@@ -53,40 +72,71 @@ public class ExpenseControllerTest {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     Date convertedCurrentDate = dateFormat.parse("2013-09-18");
 
-    Category category = new Category();
-    Expense expense = new Expense();
-    expense.setTitle("demo");
-    expense.setDate(convertedCurrentDate);
-    expense.setAmount(10000);
-    expense.setDescription("demo");
-    expense.setCategory(category);
-    expense.getCategory().setCategoryName("Electricity");
+    Expense expense = new Expense(user, user.getId(), "demo", category, convertedCurrentDate, 10000,
+        "demo", category.getCategoryName());
+    expense.setId(1);
+    expense.setCategoryId(1);
+    expense.setDate(new Date());
 
-    GsonBuilder gsonbuilder = new GsonBuilder();
-    Gson gson = gsonbuilder.setPrettyPrinting().create();
-    jsonExpense = gson.toJson(expense);
+    String returnedExpense = objectMapper.writeValueAsString(expense);
+    System.out.println(returnedExpense);
+    BDDMockito.given(expenseService.addExpense(ArgumentMatchers.any(Expense.class)))
+        .willReturn(expense);
 
-    JSONObject jObject = new JSONObject(jsonExpense);
-    jObject.put("date", "2013-09-18");
-    jsonExpense = jObject.toString();
+    mockmvc
+        .perform(post("/user/expenses").contentType(MediaType.APPLICATION_JSON)
+            .content(returnedExpense).accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.id").exists())
+        .andExpect(jsonPath("$.userId").value(user.getId()))
+        .andExpect(jsonPath("$.categoryName").value("Electricity"))
+        .andExpect(jsonPath("$.categoryId").value(category.getId())).andDo(print());
+  }
 
-    BDDMockito.given(expenseService.addExpense(expense)).willReturn(anyExpense);
+  @Test(expected = CategoryNameNotFoundException.class)
+  public void testAddExpense_throwsCategoryNameNotFoundException() throws Exception {
 
-    mockmvc.perform(post("/user/expenses").contentType(MediaType.APPLICATION_JSON).header(
-        HttpHeaders.AUTHORIZATION,
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZW1vQGdtYWlsLmNvbSIsImV4cCI6MTUzNTAyMzUzMX0.p4fZie8mGSB52aRxgEk_ToH5GogY3qbWJ1QeyDpjIXM22LeNhjHHrOzPgyzDEVIKRbnD5oCsHOZgCKbSfzgEwQ")
-        .requestAttr("title", "expenses")
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date convertedCurrentDate = dateFormat.parse("2013-09-18");
 
-        .content(jsonExpense)).andExpect(status().isOk());
+    Expense expense = new Expense(user, user.getId(), "demo", category, convertedCurrentDate, 10000,
+        "demo", category.getCategoryName());
+    expense.setId(1);
+    expense.setCategoryId(1);
+    expense.setDate(new Date());
 
+    String returnedExpense = objectMapper.writeValueAsString(expense);
+    System.out.println(returnedExpense);
+
+    BDDMockito.given(expenseService.addExpense(expense))
+        .willThrow(CategoryNameNotFoundException.class);
+
+    Mockito.when(expenseService.addExpense(expense)).thenThrow(CategoryNameNotFoundException.class);
+
+    mockmvc
+        .perform(post("/user/expenses").contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(returnedExpense).accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().is5xxServerError()).andDo(print());
   }
 
   @Test
   public void testGetAll() throws Exception {
+    Expense expense1 =
+        new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
+    Expense expense2 =
+        new Expense(user, user.getId(), "demo", category, null, 7000, "demo", "Electricity");
+    Expense expense3 =
+        new Expense(user, user.getId(), "demo", category, null, 900, "description", "Electricity");
 
-    BDDMockito.given(expenseService.getAll()).willReturn(new ArrayList<Expense>());
+    Mockito.when(expenseService.getAll()).thenReturn(Arrays.asList(expense1, expense2, expense3));
+
     mockmvc.perform(get("/user/expenses").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+        .andExpect(jsonPath("$[0].categoryName", is("Electricity")))
+        .andExpect(jsonPath("$[0].userId", is(user.getId())))
+        .andExpect(jsonPath("$[0].id").exists())
+        .andExpect(jsonPath("$[0].id", is(any(Integer.class))))
+        .andExpect(jsonPath("$[0].user.id", is(user.getId()))).andExpect(status().isOk());
+
+    verify(expenseService, times(1)).getAll();
   }
 
 }

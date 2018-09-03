@@ -19,16 +19,13 @@ public class UserService {
       @Override
       public String encode(CharSequence rawPassword) {
         return BCrypt.hashpw((String) rawPassword, BCrypt.gensalt(10));
-
       }
 
       @Override
       public boolean matches(CharSequence rawPassword, String encodedPassword) {
         String str = rawPassword.toString();
         return BCrypt.checkpw(str, encodedPassword);
-
       }
-
     };
   }
 

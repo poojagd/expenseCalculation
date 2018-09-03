@@ -16,7 +16,7 @@ public class CategoryService {
   public Category findByCategoryName(String categoryName)
       throws CategoryNotFoundException, CategoryNameNotFoundException {
 
-    if (categoryName.equals("null") || categoryName == null || categoryName.equals("")) {
+    if (categoryName.length() == 0 || categoryName.equals(null) || categoryName.isEmpty() ||categoryName.equals("null") || categoryName.equals("") ) {
       throw new CategoryNameNotFoundException(
           "Category name is null. Please enter valid category name.");
     }

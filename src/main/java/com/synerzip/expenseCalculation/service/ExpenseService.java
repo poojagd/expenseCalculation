@@ -25,6 +25,7 @@ public class ExpenseService {
   public Expense addExpense(Expense expense) throws CategoryNameNotFoundException {
     int id = sessionUser.getUser().getId();
     expense.setUserId(id);
+    expense.setUser(sessionUser.getUser());
     Category category = null;
     try {
       category = categoryService.findByCategoryName(expense.getCategoryName());
