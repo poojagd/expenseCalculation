@@ -2,6 +2,8 @@ package com.synerzip.expenseCalculation;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -122,6 +124,22 @@ public class ExpenseServiceTest {
     assertEquals(3, expenses.size());
     assertArrayEquals(expenses.toArray(), Arrays.asList(expense1, expense2, expense3).toArray());
     assertThat(expenses, hasItem(expense1));
+
+  }
+  
+  @Test
+  public void testDeleteById() {
+
+   Expense expense =
+       new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
+   expense.setId(1);
+    
+   Mockito.doNothing().when(expenseRepository).deleteById(expense.getId());
+    
+   expenseService.deleteExpense(1);
+   
+   verify(expenseRepository).deleteById(1);
+    
 
   }
 

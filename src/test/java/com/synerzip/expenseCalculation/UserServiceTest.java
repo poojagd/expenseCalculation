@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.synerzip.expenseCalculation.exceptions.EmailIdExistsException;
 import com.synerzip.expenseCalculation.model.User;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import com.synerzip.expenseCalculation.repository.UserRepository;
 import com.synerzip.expenseCalculation.service.UserService;
 

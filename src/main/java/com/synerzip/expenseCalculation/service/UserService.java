@@ -37,7 +37,7 @@ public class UserService {
     String encodedPassword = passwordEncoder().encode(rawPassword);
 
     user.setPassword(encodedPassword);
-    
+
     User founduser = userRepository.findByEmail(user.getEmail());
     if (founduser != null) {
       throw new EmailIdExistsException("EmailId already exists. Please enter new emailId.");

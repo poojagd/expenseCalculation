@@ -16,7 +16,9 @@ public class CategoryService {
   public Category findByCategoryName(String categoryName)
       throws CategoryNotFoundException, CategoryNameNotFoundException {
 
-    if (categoryName.length() == 0 || categoryName.equals(null) || categoryName.isEmpty() ||categoryName.equals("null") || categoryName.equals("") ) {
+    if (categoryName.equals(null) || categoryName.length() == 0 || categoryName.isEmpty()
+        || categoryName.equals("null") || categoryName.toUpperCase().equals("NULL")
+        || categoryName.equals("")) {
       throw new CategoryNameNotFoundException(
           "Category name is null. Please enter valid category name.");
     }
@@ -27,7 +29,6 @@ public class CategoryService {
       throw new CategoryNotFoundException("Category not found in the table.",
           new NullPointerException());
     }
-
     return category;
 
   }

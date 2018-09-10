@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -138,5 +139,15 @@ public class ExpenseControllerTest {
 
     verify(expenseService, times(1)).getAll();
   }
+  
+  @Test
+  public void testDeleteById() throws Exception {
+    
+    Mockito.doNothing().when(expenseService).deleteExpense(1);    
+    
+    this.mockmvc.perform(delete("/user/expenses/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 
 }
