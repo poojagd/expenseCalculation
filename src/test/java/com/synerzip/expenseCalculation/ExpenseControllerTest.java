@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,5 +151,42 @@ public class ExpenseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+  
+  @Test
+  public void testGetMonthlyExpenses() throws Exception {
+    Expense expense1 =
+        new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
+    Expense expense2 =
+        new Expense(user, user.getId(), "demo", category, null, 7000, "demo", "Electricity");
+    Expense expense3 =
+        new Expense(user, user.getId(), "demo", category, null, 900, "description", "Electricity");
+    
+    expense1.setDate(new Date(2018, 9, 10));
+    expense2.setDate(new Date(2018, 5, 10));
+    expense3.setDate(new Date(2018, 3, 10));
+    
+    HashMap<String, Float> map = new HashMap<>();
+    map.put("January", (float) 0.0);
+    map.put("February", (float) 0.0);
+    map.put("March", (float) 900);
+    map.put("April", (float) 0.0);
+    map.put("May", (float) 7000);
+    map.put("June", (float) 0.0);
+    map.put("July", (float) 0.0);
+    map.put("August", (float) 0.0);
+    map.put("September", (float) 15000);
+    map.put("October", (float) 0.0);
+    map.put("November", (float) 0.0);
+    map.put("December", (float) 0.0);
+
+    Mockito.when(expenseService.getMonthlyExpenses()).thenReturn(map);
+
+    mockmvc.perform(get("/user/expenses/monthwise").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.January", is(0.0)))
+        .andExpect(jsonPath("$.May", is(7000.0)));
+
+    verify(expenseService, times(1)).getMonthlyExpenses();
+  }
 
 }

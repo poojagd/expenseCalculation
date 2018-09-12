@@ -30,7 +30,6 @@ public class CategoryService {
           new NullPointerException());
     }
     return category;
-
   }
 
   public Category create(Category category) {

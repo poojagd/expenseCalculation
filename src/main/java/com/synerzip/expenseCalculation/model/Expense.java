@@ -78,9 +78,7 @@ public class Expense {
     this.amount = amount;
     this.description = description;
     this.categoryName = categoryName;
-
   }
-
 
   public User getUser() {
     return user;

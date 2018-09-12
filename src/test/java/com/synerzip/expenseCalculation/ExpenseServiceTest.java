@@ -3,11 +3,11 @@ package com.synerzip.expenseCalculation;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -119,6 +119,7 @@ public class ExpenseServiceTest {
     Mockito.when(sessionUser.getUser()).thenReturn(user);
     Mockito.when(expenseRepository.findByUserId(user.getId()))
         .thenReturn(Arrays.asList(expense1, expense2, expense3));
+
     List<Expense> expenses = expenseRepository.findByUserId(user.getId());
 
     assertEquals(3, expenses.size());
@@ -126,21 +127,60 @@ public class ExpenseServiceTest {
     assertThat(expenses, hasItem(expense1));
 
   }
-  
+
   @Test
   public void testDeleteById() {
 
-   Expense expense =
-       new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
-   expense.setId(1);
-    
-   Mockito.doNothing().when(expenseRepository).deleteById(expense.getId());
-    
-   expenseService.deleteExpense(1);
-   
-   verify(expenseRepository).deleteById(1);
-    
+    Expense expense =
+        new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
+    expense.setId(1);
 
+    Mockito.doNothing().when(expenseRepository).deleteById(expense.getId());
+
+    expenseService.deleteExpense(1);
+
+    verify(expenseRepository).deleteById(1);
+
+  }
+
+  @Test
+  public void testGetMonthlyExpenses() {
+
+    Expense expense1 =
+        new Expense(user, user.getId(), "demo", category, null, 15000, null, "Electricity");
+    Expense expense2 =
+        new Expense(user, user.getId(), "demo", category, null, 7000, "demo", "Electricity");
+    Expense expense3 =
+        new Expense(user, user.getId(), "demo", category, null, 900, "description", "Electricity");
+
+    expense1.setDate(new Date(2018, 9, 10));
+    expense2.setDate(new Date(2018, 5, 10));
+    expense3.setDate(new Date(2018, 3, 10));
+
+    HashMap<String, Float> map = new HashMap<>();
+    map.put("January", (float) 0.0);
+    map.put("February", (float) 0.0);
+    map.put("March", (float) 900);
+    map.put("April", (float) 0.0);
+    map.put("May", (float) 7000);
+    map.put("June", (float) 0.0);
+    map.put("July", (float) 0.0);
+    map.put("August", (float) 0.0);
+    map.put("September", (float) 15000);
+    map.put("October", (float) 0.0);
+    map.put("November", (float) 0.0);
+    map.put("December", (float) 0.0);
+
+    Mockito.when(sessionUser.getUser()).thenReturn(user);
+    Mockito.when(expenseRepository.findByUserId(user.getId()))
+        .thenReturn(Arrays.asList(expense1, expense2, expense3));
+
+    HashMap<String, Float> returnedMap = expenseService.getMonthlyExpenses();
+
+    System.out.println(returnedMap);
+
+    assertEquals(12, returnedMap.size());
+    assertTrue(returnedMap.containsKey("January"));
   }
 
 }
