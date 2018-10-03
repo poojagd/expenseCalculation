@@ -25,7 +25,7 @@ public class Expense {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
 
-  @ManyToOne(optional = true)
+  @ManyToOne
   @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
   private User user;
 

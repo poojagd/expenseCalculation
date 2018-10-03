@@ -20,6 +20,7 @@ public class LoginTest {
   public CustomUserDetails setCustomUserDetails() {
     return new CustomUserDetails(user);
   }
+
   CustomUserDetails userDetails = setCustomUserDetails();
 
   @Test

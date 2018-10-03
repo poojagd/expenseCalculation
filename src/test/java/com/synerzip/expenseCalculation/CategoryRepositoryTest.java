@@ -2,7 +2,6 @@ package com.synerzip.expenseCalculation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class CategoryRepositoryTest {
 
   @Test
   public void testFindByCategoryName() {
-    Category category = new Category("Electricity");
+    Category category = new Category("New");
     entityManager.persistAndFlush(category);
 
     Category foundCategory = categoryRepository.findByCategoryName(category.getCategoryName());
@@ -34,7 +33,7 @@ public class CategoryRepositoryTest {
 
   @Test
   public void testCreate() {
-    Category category = new Category("Electricity");
+    Category category = new Category("New");
 
     entityManager.persistAndFlush(category);
 

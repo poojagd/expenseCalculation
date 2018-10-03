@@ -5,10 +5,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
@@ -116,14 +118,18 @@ public class ExpenseServiceTest {
     Expense expense3 =
         new Expense(user, user.getId(), "demo", category, null, 900, "description", "Electricity");
 
+    List<Expense> allExpenses = new ArrayList<Expense>();
+    allExpenses.add(expense1);
+    allExpenses.add(expense2);
+    allExpenses.add(expense3);
+
     Mockito.when(sessionUser.getUser()).thenReturn(user);
-    Mockito.when(expenseRepository.findByUserId(user.getId()))
-        .thenReturn(Arrays.asList(expense1, expense2, expense3));
+    Mockito.when(expenseRepository.findByUserId(user.getId())).thenReturn(allExpenses);
 
     List<Expense> expenses = expenseRepository.findByUserId(user.getId());
 
     assertEquals(3, expenses.size());
-    assertArrayEquals(expenses.toArray(), Arrays.asList(expense1, expense2, expense3).toArray());
+    assertArrayEquals(expenses.toArray(), allExpenses.toArray());
     assertThat(expenses, hasItem(expense1));
 
   }
@@ -143,6 +149,7 @@ public class ExpenseServiceTest {
 
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void testGetMonthlyExpenses() {
 
@@ -157,30 +164,66 @@ public class ExpenseServiceTest {
     expense2.setDate(new Date(2018, 5, 10));
     expense3.setDate(new Date(2018, 3, 10));
 
-    HashMap<String, Float> map = new HashMap<>();
-    map.put("January", (float) 0.0);
-    map.put("February", (float) 0.0);
-    map.put("March", (float) 900);
-    map.put("April", (float) 0.0);
-    map.put("May", (float) 7000);
-    map.put("June", (float) 0.0);
-    map.put("July", (float) 0.0);
-    map.put("August", (float) 0.0);
-    map.put("September", (float) 15000);
-    map.put("October", (float) 0.0);
-    map.put("November", (float) 0.0);
-    map.put("December", (float) 0.0);
 
     Mockito.when(sessionUser.getUser()).thenReturn(user);
     Mockito.when(expenseRepository.findByUserId(user.getId()))
         .thenReturn(Arrays.asList(expense1, expense2, expense3));
 
-    HashMap<String, Float> returnedMap = expenseService.getMonthlyExpenses();
+    Map<String, Object> returnedMap = expenseService.getMonthlyExpenses();
 
     System.out.println(returnedMap);
 
     assertEquals(12, returnedMap.size());
     assertTrue(returnedMap.containsKey("January"));
+  }
+
+  @SuppressWarnings("deprecation")
+  @Test
+  public void testMonthlyReport() {
+    Category category1 = new Category(1, "Electricity");
+    Category category2 = new Category(2, "Phone");
+    Category category3 = new Category(3, "Food");
+
+    Expense expense1 =
+        new Expense(user, user.getId(), "demo", category1, null, 15000, null, "Electricity");
+    Expense expense2 =
+        new Expense(user, user.getId(), "demo", category2, null, 7000, "demo", "Phone");
+    Expense expense3 =
+        new Expense(user, user.getId(), "demo", category3, null, 900, "description", "Food");
+    Expense expense4 =
+        new Expense(user, user.getId(), "demo", category3, null, 900, "description", "Food");
+
+    expense1.setDate(new Date(2018, 9, 7));
+    expense2.setDate(new Date(2018, 9, 1));
+    expense3.setDate(new Date(2018, 9, 19));
+    expense4.setDate(new Date(2018, 9, 25));
+
+    List<Expense> expenseList = new ArrayList<Expense>();
+    expenseList.add(expense1);
+    expenseList.add(expense2);
+    expenseList.add(expense3);
+    expenseList.add(expense4);
+
+
+    int monthlyExpenditure = 23800;
+
+    Map<String, Object> amountForCategoryName = new HashMap<>();
+    amountForCategoryName.put("Electricity", 15000);
+    amountForCategoryName.put("Phone", 7000);
+    amountForCategoryName.put("Food", 1800);
+    amountForCategoryName.put("totalExpenditure", 23800);
+
+    Mockito.when(sessionUser.getUser().getId()).thenReturn(user.getId());
+
+    Mockito.when(expenseRepository.findByUserId(user.getId())).thenReturn(expenseList);
+
+    Map<String, Object> returnedMap = expenseService.monthlyReport("SEP");
+
+    System.out.println("returned map of monthly report =" + returnedMap);
+
+    assertEquals(4, returnedMap.size());
+    assertTrue(returnedMap.containsKey("Electricity"));
+    assertTrue(returnedMap.containsKey("totalExpenditure"));
   }
 
 }

@@ -1,7 +1,7 @@
 package com.synerzip.expenseCalculation.controller;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,8 +40,15 @@ public class ExpenseController {
   }
 
   @GetMapping("/monthwise")
-  public HashMap<String, Float> getMonthlyExpenses() {
+  public Map<String, Object> getMonthlyExpenses() {
     return expenseService.getMonthlyExpenses();
 
   }
+
+  @GetMapping("/monthReport/{month}")
+  public Map<String, Object> monthlyReport(@PathVariable String month) {
+    return expenseService.monthlyReport(month);
+
+  }
+
 }

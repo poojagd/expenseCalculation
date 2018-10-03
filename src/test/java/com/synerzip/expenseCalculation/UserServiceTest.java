@@ -3,6 +3,7 @@ package com.synerzip.expenseCalculation;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.synerzip.expenseCalculation.exceptions.EmailIdExistsException;
+import com.synerzip.expenseCalculation.model.SessionUser;
 import com.synerzip.expenseCalculation.model.User;
 import org.springframework.test.context.junit4.SpringRunner;
 import com.synerzip.expenseCalculation.repository.UserRepository;
@@ -46,10 +48,14 @@ public class UserServiceTest {
     public UserService userService() {
       return new UserService();
     }
+
   }
 
   @Autowired
   UserService userService;
+
+  @MockBean(answer = Answers.RETURNS_DEEP_STUBS)
+  SessionUser sessionUser;
 
   @MockBean
   UserRepository userRepository;
@@ -91,4 +97,46 @@ public class UserServiceTest {
     assertEquals(user, foundUser);
 
   }
+
+  @Test
+  public void testUpdatePassword() {
+    String email = "demo@gmail.com";
+    Mockito.when(sessionUser.getUser().getEmail()).thenReturn(email);
+
+    Mockito.when(userRepository.findByEmail(email)).thenReturn(user);
+
+    String encodedPassword = passwordEncoder().encode("newPassword");
+    user.setPassword(encodedPassword);
+
+    Mockito.when(userRepository.save(user)).thenReturn(user);
+
+    User returnedUser = userService.updatePassword("newPassword");
+
+    assertEquals(user, returnedUser);
+
+  }
+
+  @Test
+  public void testUpdateFirstNameAndLastName() {
+
+    User userArgument = new User();
+
+    userArgument.setFirstName("pooja");
+    userArgument.setLastName("devray");
+
+    String email = "demo@gmail.com";
+    Mockito.when(sessionUser.getUser().getEmail()).thenReturn(email);
+
+    Mockito.when(userRepository.findByEmail(email)).thenReturn(user);
+
+    user.setFirstName(userArgument.getFirstName());
+    user.setLastName(userArgument.getLastName());
+
+    Mockito.when(userRepository.save(user)).thenReturn(user);
+    User returnedUser = userService.updateFirstNameAndLastName(userArgument);
+
+    assertEquals(user, returnedUser);
+
+  }
+
 }

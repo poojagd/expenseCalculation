@@ -52,7 +52,7 @@ public class User {
   }
 
   public User(int id, String firstName, String lastName, @Email String email,
-      @Size(min = 2, message = "Password should be atleast 2 characters.") String password) {
+      @Size(min = 6, message = "Password should be atleast 6 characters.") String password) {
     super();
     this.id = id;
     this.firstName = firstName;

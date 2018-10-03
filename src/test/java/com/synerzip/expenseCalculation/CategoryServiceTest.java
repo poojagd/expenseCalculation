@@ -1,10 +1,9 @@
 package com.synerzip.expenseCalculation;
 
 import static org.junit.Assert.*;
-
-import org.junit.Rule;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +37,10 @@ public class CategoryServiceTest {
 
   Category category = new Category(1, "Electricity");
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
   @Test
   public void testFindByCategoryName()
       throws CategoryNotFoundException, CategoryNameNotFoundException {
-    
+
     String categoryName = "Electricity";
     Mockito.when(categoryRepository.findByCategoryName(categoryName)).thenReturn(category);
 
@@ -77,5 +73,24 @@ public class CategoryServiceTest {
 
     Category createdCategory = categoryService.create(category);
     assertEquals(category, createdCategory);
+  }
+
+  @Test
+  public void testgetAllExpenses() {
+
+    List<Category> allCategories = new ArrayList<>();
+    List<String> categoryNames = new ArrayList<>();
+
+    allCategories.add(category);
+    allCategories.add(new Category(2, "Mobile"));
+    allCategories.add(new Category(3, "Food"));
+
+    Mockito.when(categoryRepository.findAll()).thenReturn(allCategories);
+
+    categoryNames = categoryService.getAllCategories();
+
+    assertEquals(3, categoryNames.size());
+    assertTrue(categoryNames.contains("Mobile"));
+
   }
 }

@@ -1,5 +1,7 @@
 package com.synerzip.expenseCalculation.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.synerzip.expenseCalculation.exceptions.CategoryNameNotFoundException;
@@ -35,5 +37,16 @@ public class CategoryService {
   public Category create(Category category) {
 
     return categoryRepository.save(category);
+  }
+
+  public List<String> getAllCategories() {
+    List<Category> allCategories = (List<Category>) categoryRepository.findAll();
+    List<String> categoryNames = new ArrayList<>();
+
+    for (Category category : allCategories) {
+      categoryNames.add(category.getCategoryName());
+    }
+
+    return categoryNames;
   }
 }

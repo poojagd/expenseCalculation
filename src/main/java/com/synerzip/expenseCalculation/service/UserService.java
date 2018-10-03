@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.synerzip.expenseCalculation.exceptions.EmailIdExistsException;
+import com.synerzip.expenseCalculation.model.SessionUser;
 import com.synerzip.expenseCalculation.model.User;
 import com.synerzip.expenseCalculation.repository.UserRepository;
 
@@ -30,6 +31,9 @@ public class UserService {
   }
 
   @Autowired
+  SessionUser sessionUser;
+
+  @Autowired
   private UserRepository userRepository;
 
   public User create(User user) throws EmailIdExistsException {
@@ -51,4 +55,33 @@ public class UserService {
     return user;
 
   }
+
+  public User updatePassword(String password) {
+
+    String email = sessionUser.getUser().getEmail();
+    User user = userRepository.findByEmail(email);
+
+    String encodedPassword = passwordEncoder().encode(password);
+    user.setPassword(encodedPassword);
+    userRepository.save(user);
+    return user;
+  }
+
+  public User updateFirstNameAndLastName(User user) {
+
+    String email = sessionUser.getUser().getEmail();
+    User foundUser = userRepository.findByEmail(email);
+    if (!user.getFirstName().isEmpty()) {
+      String firstName = user.getFirstName();
+      foundUser.setFirstName(firstName);
+    }
+
+    if (!user.getLastName().isEmpty()) {
+      String lastName = user.getLastName();
+      foundUser.setLastName(lastName);
+    }
+    userRepository.save(foundUser);
+    return foundUser;
+  }
+
 }

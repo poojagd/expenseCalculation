@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -141,17 +140,16 @@ public class ExpenseControllerTest {
 
     verify(expenseService, times(1)).getAll();
   }
-  
+
   @Test
   public void testDeleteById() throws Exception {
-    
-    Mockito.doNothing().when(expenseService).deleteExpense(1);    
-    
-    this.mockmvc.perform(delete("/user/expenses/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-  
+
+    Mockito.doNothing().when(expenseService).deleteExpense(1);
+
+    this.mockmvc.perform(delete("/user/expenses/1").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+  }
+
   @Test
   public void testGetMonthlyExpenses() throws Exception {
     Expense expense1 =
@@ -160,12 +158,12 @@ public class ExpenseControllerTest {
         new Expense(user, user.getId(), "demo", category, null, 7000, "demo", "Electricity");
     Expense expense3 =
         new Expense(user, user.getId(), "demo", category, null, 900, "description", "Electricity");
-    
+
     expense1.setDate(new Date(2018, 9, 10));
     expense2.setDate(new Date(2018, 5, 10));
     expense3.setDate(new Date(2018, 3, 10));
-    
-    HashMap<String, Float> map = new HashMap<>();
+
+    HashMap<String, Object> map = new HashMap<>();
     map.put("January", (float) 0.0);
     map.put("February", (float) 0.0);
     map.put("March", (float) 900);
@@ -182,8 +180,7 @@ public class ExpenseControllerTest {
     Mockito.when(expenseService.getMonthlyExpenses()).thenReturn(map);
 
     mockmvc.perform(get("/user/expenses/monthwise").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.January", is(0.0)))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.January", is(0.0)))
         .andExpect(jsonPath("$.May", is(7000.0)));
 
     verify(expenseService, times(1)).getMonthlyExpenses();
